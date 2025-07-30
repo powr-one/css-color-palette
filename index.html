@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Color Palette Generator</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;900&display=swap" rel="stylesheet">
+
+<style>
+/* =======================
+ROOT VARIABLES
+======================= */
+:root {
+  --powr1-dark: #353535;
+  --powr1-black: #202020;
+  --powr1-light: #9a9eb1;
+  --powr1-white: #c5c8d3;
+  --powr1-red: #DF5E62;
+  --powr1-blue: #3BDBFF;
+  --powr1-green: green;
+}
+
+/* =======================
+BASE STYLES
+======================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  touch-action: manipulation;
+}
+
+body {
+  font-family: 'Roboto';
+  height: 92vh;
+  -webkit-overflow-scrolling: touch;
+  font-weight: 500;
+  font-size: 16px;
+  margin: 0 auto;
+  color: var(--powr1-white);
+  background: var(--powr1-black);
+  text-align: center;
+  overflow: hidden;
+}
+
+/* =======================
+LAYOUT STYLES
+======================= */
+.flexsec {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  border-bottom: 0px solid var(--powr1-light);
+  overflow: hidden;
+}
+
+.flexcol {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 100%;
+  
+}
+
+.flexbox {
+  display: flex;
+  flex-direction: row;
+  min-height: 30px;
+  height: auto;
+}
+
+/* =======================
+BUTTON STYLES
+======================= */
+.button {
+  border: none;
+  background: none;
+  padding: 8px;
+  font: inherit;
+  color: var(--powr1-light);
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex: 1 1 0;
+  max-height: 50px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-radius: 25px;
+  transition: background-color 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+}
+
+.button:active {
+  animation: buttonPress 0.3s ease;
+}
+
+@keyframes buttonPress {
+  0% {}
+  50% {
+    background-color: var(--powr1-red);
+    color: var(--powr1-white);
+  }
+  100% {}
+}
+
+/* =======================
+TYPOGRAPHY STYLES
+======================= */
+h1 {
+  font-size: 2.5rem;
+  font-weight: 900;
+  text-transform: none;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
+}
+
+p {
+  margin-bottom: 1rem;
+  line-height: 1.7;
+}
+
+a {
+  font-size: 0.85rem;
+  color: var(--powr1-blue);
+  text-decoration: none;
+}
+
+.meta {
+  font-size: 0.5rem;
+  color: grey;
+}
+
+.fas {
+  font-size: 0.5rem;
+  flex-shrink: 0;
+  padding: 0 8px;
+}
+
+/* =======================
+RESPONSIVE STYLES
+======================= */
+@media (min-width: 768px) {
+  .flexsec {
+    flex-direction: row;
+  }
+  .button {
+    min-height: auto;
+    padding: 8px;
+  }
+  
+  .flexcol{
+       flex: 0 0 50%}
+}
+
+/* =======================
+TOGGLE CONTROLS
+======================= */
+.menu-1,
+.menu-2 {
+  display: none;
+}
+
+#toggle-menu-1:checked ~ .box-editor {
+  display: none;
+}
+
+#toggle-menu-1:checked ~ .menu-1 {
+  display: flex;
+}
+
+#toggle-menu-2:checked ~ .box-editor {
+  display: none;
+}
+
+#toggle-menu-2:checked ~ .menu-2 {
+  display: flex;
+}
+
+#toggle-column:checked ~ .col-input {
+  display: none;
+}
+
+#toggle-column:checked ~ .col-output {
+  flex: 0 0 100%;
+}
+
+/* =======================
+EDITOR STYLES
+======================= */
+#editor {
+  width: 100%;
+  height: 100%;
+  padding: 15px;
+  background: none;
+  color: var(--powr1-white);
+  border: none;
+  resize: none;
+  font-size: 10px;
+  line-height: 1.5;
+  tab-size: 2;
+}
+
+#editor:focus {
+  outline: none;
+}
+
+/* =======================
+OUTPUT FRAME STYLES
+======================= */
+#output {
+  background: none;
+}
+
+/* =======================
+COLOR PICKER STYLES
+======================= */
+.color-palette {
+  display: flex;
+  flex-wrap: wrap;
+  
+  justify-content: center;
+  padding: 0px;
+ 
+}
+
+.base-color {
+  width:80%;
+  height: 150%;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+.accent-color {
+  width: 20%;
+  height: 50%;
+  border-radius: 100%;
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
+  border: 0px solid white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  cursor: pointer;
+}
+
+.color-label {
+  font-weight: bold;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* =======================
+RESULT PREVIEW STYLES
+======================= */
+.preview-container {
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.preview-button {
+  padding: 20px 30px;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  max-width: 200px;
+}
+
+.preview-notification {
+  padding: 10px 20px;
+  border-radius: 25px;
+  max-width: 300px;
+}
+</style>
+</head>
+
+<body>
+<section class="flexsec sec-main">
+  <input type="checkbox" id="toggle-column" hidden> 
+
+  <!-- =======================
+  COLUMN - INPUT
+  ======================= -->
+  <div class="flexcol col-input">
+    <input type="checkbox" id="toggle-menu-1" hidden>
+    <input type="checkbox" id="toggle-menu-2" hidden>
+    
+    <!-- =======================
+    BAR - MENU
+    ======================= -->
+    <div class="flexbox bar-menu" style="padding:15px">
+      <div class="flexbox menu-main" style="width: 80%; max-width: 400px;justify-content: space-between; align-items: stretch; padding: 0px 14px; border-radius: 25px; background: var(--powr1-dark); color: var(--powr1-light);">
+        <label class="button" id="menu-btn-1" for="toggle-menu-1">
+          <i class="fas fa-file"></i>
+          <span class="meta">File</span>
+        </label>
+        <label class="button" id="menu-btn-2" for="toggle-menu-2">
+          <i class="fas fa-edit"></i>
+          <span class="meta">Edit</span>
+        </label>
+        <button class="button" id="invert-btn">
+          <i class="fas fa-adjust"></i>
+          <span class="meta">Invert</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- EDITOR -->
+    <div class="flexbox box-editor" style="flex:1; flex-direction: column;">
+      <div class="color-palette" id="color-palette">
+        <!-- Base colors will be added here by JavaScript -->
+      </div>
+    </div>
+
+    <!-- =======================
+    MENU1 - FILE
+    ======================= -->
+    <div class="flexbox menu-1" style="flex: 1;flex-direction: column;">
+      <button class="button" id="export-css">
+        <i class="fas fa-download"></i>
+        <span class="meta">Export CSS</span>
+      </button>
+      <button class="button" id="copy-css">
+        <i class="fas fa-copy"></i>
+        <span class="meta">Copy to Clipboard</span>
+      </button>
+      <button class="button" id="import-css">
+        <i class="fas fa-upload"></i>
+        <span class="meta">Import CSS</span>
+      </button>
+    </div>
+
+    <!-- =======================
+    MENU2 - EDIT
+    ======================= -->
+    <div class="flexbox menu-2" style="flex:1;flex-direction: column;">
+      <!-- Empty for now -->
+    </div>
+
+    <!-- =======================
+    NOTIFICATIONS CONTAINER
+    ======================= -->
+    <div class="flexbox" id="notifications" style="position: fixed; bottom: 80px; right: 20px; display: none;padding: 14px; border-radius: 25px; z-index:10;"></div>
+
+    <!-- =======================
+    BAR - STATUS
+    ======================= -->
+    <div class="flexbox bar-status" style="flex:0 0 3vh; flex-direction: row;">
+      <button class="button">
+        <span class="meta" id="palette-status">Normal Palette</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- =======================
+  COLUMN - OUTPUT
+  ======================= -->
+  <div class="flexcol col-output" style="background: white;" id="output-preview">
+    <!-- Preview content will be generated by JavaScript -->
+    <label class="button" id="btn-run" for="toggle-column" style="position:absolute;top:15px;right:15px;background:var(--powr1-white); color:var(--powr1-black); width:50px;">
+      <i class="fas fa-play"></i>
+    </label>
+  </div>
+</section>
+
+<script>
+// Color palette data
+const palette = {
+  black: '#202020',
+  dark: '#353535',
+  light: '#9a9eb1',
+  white: '#c5c8d3',
+  accent1: '#DF5E62',
+  accent2: '#3BDBFF',
+  accent3: '#4CAF50',
+  accent4: '#FFC107'
+};
+
+let isInverted = false;
+
+// DOM elements
+const colorPalette = document.getElementById('color-palette');
+const outputPreview = document.getElementById('output-preview');
+const paletteStatus = document.getElementById('palette-status');
+const invertBtn = document.getElementById('invert-btn');
+const exportCssBtn = document.getElementById('export-css');
+const copyCssBtn = document.getElementById('copy-css');
+const importCssBtn = document.getElementById('import-css');
+
+// Initialize color pickers
+function initColorPalette() {
+  const colors = [
+    { name: 'black', label: 'Black', accent: 'accent1', opposite: 'white' },
+    { name: 'dark', label: 'Dark', accent: 'accent2', opposite: 'light' },
+    { name: 'light', label: 'Light', accent: 'accent3', opposite: 'dark' },
+    { name: 'white', label: 'White', accent: 'accent4', opposite: 'black' }
+  ];
+
+  colors.forEach(color => {
+    const colorDiv = document.createElement('div');
+    colorDiv.className = 'base-color';
+    colorDiv.style.backgroundColor = palette[color.name];
+    colorDiv.dataset.color = color.name;
+    
+    const accentDiv = document.createElement('div');
+    accentDiv.className = 'accent-color';
+    accentDiv.style.backgroundColor = palette[color.accent];
+    accentDiv.dataset.color = color.accent;
+    
+    const label = document.createElement('div');
+    label.className = 'color-label';
+    label.textContent = color.label;
+    label.style.color = palette[color.opposite];
+    
+    colorDiv.appendChild(accentDiv);
+    colorDiv.appendChild(label);
+    colorPalette.appendChild(colorDiv);
+    
+    // Add click handlers
+    colorDiv.addEventListener('click', () => openColorPicker(color.name));
+    accentDiv.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openColorPicker(color.accent);
+    });
+  });
+}
+
+// Open color picker
+function openColorPicker(colorName) {
+  const input = document.createElement('input');
+  input.type = 'color';
+  input.value = palette[colorName];
+  
+  input.addEventListener('input', (e) => {
+    palette[colorName] = e.target.value;
+    updatePalette();
+    updatePreview();
+  });
+  
+  input.click();
+}
+
+// Update palette display
+function updatePalette() {
+  document.querySelectorAll('.base-color').forEach(el => {
+    const colorName = el.dataset.color;
+    el.style.backgroundColor = palette[colorName];
+    
+    // Update opposite text color
+    const oppositeMap = {
+      black: 'white',
+      dark: 'light',
+      light: 'dark',
+      white: 'black'
+    };
+    
+    if (oppositeMap[colorName]) {
+      el.querySelector('.color-label').style.color = palette[oppositeMap[colorName]];
+    }
+  });
+  
+  document.querySelectorAll('.accent-color').forEach(el => {
+    el.style.backgroundColor = palette[el.dataset.color];
+  });
+}
+
+// Update preview
+function updatePreview() {
+  const lightColor = isInverted ? palette.black : palette.light;
+  const darkColor = isInverted ? palette.white : palette.dark;
+  const textColor = isInverted ? palette.black : palette.dark;
+  const accentColor = isInverted ? palette.accent2 : palette.accent1;
+  
+  outputPreview.innerHTML = `
+    <div class="preview-container" style="background-color: ${lightColor}; color: ${textColor}">
+      <h1 style="color: ${darkColor}">Heading 1</h1>
+      <h2 style="color: ${darkColor}">Heading 2</h2>
+      <h3 style="color: ${darkColor}">Heading 3</h3>
+      <p>This is a paragraph of text showing how the colors work together.</p>
+      <a href="#" style="color: ${accentColor}">This is a link</a>
+      <button class="preview-button" style="background-color: ${accentColor}; color: ${isInverted ? palette.dark : palette.white}">
+        Click Me
+      </button>
+      <div class="preview-notification" style="background-color: ${darkColor}; color: ${lightColor}">
+        This is a notification
+      </div>
+    </div>
+    <label class="button" id="btn-run" for="toggle-column" style="position:absolute;top:15px;right:15px;background:${darkColor}; color:${lightColor}; width:50px;">
+      <i class="fas fa-play"></i>
+    </label>
+  `;
+}
+
+// Invert palette
+function invertPalette() {
+  isInverted = !isInverted;
+  paletteStatus.textContent = isInverted ? 'Inverted Palette' : 'Normal Palette';
+  updatePreview();
+}
+
+// Generate CSS content
+function generateCSS() {
+  let css = `:root {\n`;
+  for (const [name, value] of Object.entries(palette)) {
+    css += `  --${name}: ${value};\n`;
+  }
+  css += `}`;
+  return css;
+}
+
+// Export CSS
+function exportCSS() {
+  const css = generateCSS();
+  const blob = new Blob([css], { type: 'text/css' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'palette.css';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  
+  notify('CSS exported successfully');
+}
+
+// Copy CSS to clipboard
+function copyCSSToClipboard() {
+  const css = generateCSS();
+  navigator.clipboard.writeText(css)
+    .then(() => notify('CSS copied to clipboard'))
+    .catch(err => {
+      console.error('Failed to copy: ', err);
+      notify('Failed to copy CSS', true);
+    });
+}
+
+// Import CSS
+function importCSS() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.css';
+  
+  input.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const css = event.target.result;
+        const regex = /--([a-z]+):\s*([^;]+);/g;
+        let match;
+        
+        while ((match = regex.exec(css)) !== null) {
+          const name = match[1];
+          const value = match[2].trim();
+          if (palette.hasOwnProperty(name)) {
+            palette[name] = value;
+          }
+        }
+        
+        updatePalette();
+        updatePreview();
+        notify('CSS imported successfully');
+      } catch (err) {
+        notify('Error importing CSS', true);
+      }
+    };
+    reader.readAsText(file);
+  });
+  
+  input.click();
+}
+
+// Simplified notification function
+function notify(message, isError = false) {
+  const notifications = document.getElementById('notifications');
+  notifications.innerHTML = `<span class="meta">${message}</span>`;
+  notifications.style.background = isError ? 'var(--powr1-red)' : 'var(--powr1-dark)';
+  notifications.style.color = 'var(--powr1-white)';
+  notifications.style.display = 'flex';
+
+  setTimeout(() => {
+    notifications.style.display = 'none';
+  }, 3000);
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  initColorPalette();
+  updatePreview();
+  
+  // Event listeners
+  invertBtn.addEventListener('click', invertPalette);
+  exportCssBtn.addEventListener('click', exportCSS);
+  copyCssBtn.addEventListener('click', copyCSSToClipboard);
+  importCssBtn.addEventListener('click', importCSS);
+  
+  // Test notification
+  notify('Color palette editor loaded');
+});
+</script>
+</body>
+</html>
