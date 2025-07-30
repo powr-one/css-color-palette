@@ -1,7 +1,8 @@
 ### CSS-COLOR PALETTE MOBILE  
 **Minimalist color palette generator for mobile coding**  
 
-Try it: [https://your-link-here.com](https://your-link-here.com)  
+Try it for free:
+https://css-color-palette-three.vercel.app/
 
 **Key Features**  
 
